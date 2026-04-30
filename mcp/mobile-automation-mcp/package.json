@@ -1,0 +1,26 @@
+{
+  "name": "mobile-automation-mcp",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "bin": {
+    "mobile-automation-mcp": "dist/index.js"
+  },
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "appium": "appium --address 127.0.0.1 --port 4723",
+    "appium:debug": "appium --address 127.0.0.1 --port 4723 --log-level debug"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.13.0",
+    "webdriverio": "^9.27.0",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.8.0"
+  }
+}
