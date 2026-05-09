@@ -10,14 +10,15 @@ const selectorSchema = z.object({
     "iosPredicate",
     "iosClassChain",
     "text",
-    "xpath"
+    "xpath",
+    "css"
   ]),
   value: z.string()
 });
 
 export function registerTapTool(server: McpServer) {
   server.tool(
-    "mobile.tap",
+    "mobile_tap",
     "Tap a mobile element.",
     {
       selector: selectorSchema,

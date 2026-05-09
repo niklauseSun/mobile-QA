@@ -50,7 +50,7 @@ export async function createMobileSession(
 
 export function getMobileSession(): MobileSession {
   if (!currentSession) {
-    throw new Error("No active mobile session. Call mobile.launch_app first.");
+    throw new Error("No active mobile session. Call mobile_launch_app first.");
   }
 
   return currentSession;

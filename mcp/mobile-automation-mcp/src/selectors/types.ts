@@ -3,7 +3,8 @@ export type MobilePlatform = "ios" | "android";
 export type MobileRuntime =
   | "rn"
   | "android-native"
-  | "ios-native";
+  | "ios-native"
+  | "hybrid";
 
 export type SelectorStrategy =
   | "accessibilityId"
@@ -12,7 +13,8 @@ export type SelectorStrategy =
   | "iosPredicate"
   | "iosClassChain"
   | "text"
-  | "xpath";
+  | "xpath"
+  | "css";
 
 export interface MobileSelector {
   strategy: SelectorStrategy;

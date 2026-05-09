@@ -4,11 +4,11 @@ import { createMobileSession } from "../appium/session.js";
 
 export function registerLaunchAppTool(server: McpServer) {
   server.tool(
-    "mobile.launch_app",
+    "mobile_launch_app",
     "Create an Appium mobile session and launch or attach to an app.",
     {
       platform: z.enum(["ios", "android"]),
-      runtime: z.enum(["rn", "android-native", "ios-native"]),
+      runtime: z.enum(["rn", "android-native", "ios-native", "hybrid"]),
 
       appiumServerUrl: z.string().optional(),
 

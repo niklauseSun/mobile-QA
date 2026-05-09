@@ -81,7 +81,7 @@ mobile-automation-mcp 可以执行 Flow，但还需要有人把“复现步骤�
   ↓
 AI 生成结构化 Flow
   ↓
-mobile.run_flow 执行
+mobile_run_flow 执行
 ```
 
 比如：
@@ -101,6 +101,46 @@ mobile.run_flow 执行
   }
 }
 ```
+
+也可以把 Flow DSL 固化成 WebDriverIO/Appium 的 TypeScript 用例：
+
+```json
+{
+  "tool": "mobile_generate_appium_case",
+  "arguments": {
+    "testName": "订单返回白屏复现",
+    "flow": {
+      "name": "订单详情返回",
+      "platform": "ios",
+      "runtime": "ios-native",
+      "steps": [
+        {
+          "action": "tap",
+          "selector": {
+            "strategy": "accessibilityId",
+            "value": "home.orderEntry"
+          }
+        },
+        {
+          "action": "assertText",
+          "text": "订单"
+        },
+        {
+          "action": "screenshot",
+          "name": "order-list"
+        },
+        {
+          "action": "back"
+        }
+      ]
+    },
+    "outputDir": "artifacts/generated-tests",
+    "fileName": "order-detail-back.spec.ts"
+  }
+}
+```
+
+默认输出目录是 `artifacts/generated-tests`。生成的 spec 使用 WebDriverIO 的 `browser.$`、`waitForDisplayed`、`click`、`setValue`、`pause`、`saveScreenshot` 和 `back` API。
 
 这里最大的问题是：AI 不一定知道元素 ID。
 
@@ -548,6 +588,36 @@ mobile_e2e_android:
       - artifacts/mobile-e2e/
     reports:
       junit: artifacts/mobile-e2e/junit.xml
+```
+
+如果直接使用 `mobile_run_flow` 的产物结构，可以把每次运行目录整体作为 artifacts，并让 GitLab 收集所有 run 里的 JUnit：
+
+```yaml
+mobile_flow:
+  stage: test
+  script:
+    - npm ci
+    - npm run build
+    - appium --address 127.0.0.1 --port 4723 > appium.log 2>&1 &
+    - npm run mobile:flow
+  artifacts:
+    when: always
+    paths:
+      - artifacts/runs/
+      - appium.log
+    reports:
+      junit: artifacts/runs/**/junit.xml
+```
+
+`mobile_run_flow` 每次运行会生成：
+
+```text
+artifacts/runs/<runId>/
+├── flow.json
+├── report.md
+├── junit.xml
+├── screenshots/
+└── page-source/
 ```
 
 iOS 则需要 macOS runner：

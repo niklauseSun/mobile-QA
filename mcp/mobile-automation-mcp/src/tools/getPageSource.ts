@@ -6,7 +6,7 @@ import { writeTextFile } from "../evidence/artifact.js";
 
 export function registerGetPageSourceTool(server: McpServer) {
   server.tool(
-    "mobile.get_page_source",
+    "mobile_get_page_source",
     "Get current mobile page source XML.",
     {
       saveToFile: z.boolean().optional(),

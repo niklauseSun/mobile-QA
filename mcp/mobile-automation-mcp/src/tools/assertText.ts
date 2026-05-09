@@ -4,7 +4,7 @@ import { getMobileSession } from "../appium/session.js";
 
 export function registerAssertTextTool(server: McpServer) {
   server.tool(
-    "mobile.assert_text",
+    "mobile_assert_text",
     "Assert that text exists on current mobile screen.",
     {
       text: z.string(),

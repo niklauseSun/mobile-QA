@@ -3,7 +3,7 @@ import { closeMobileSession } from "../appium/session.js";
 
 export function registerCloseSessionTool(server: McpServer) {
   server.tool(
-    "mobile.close_session",
+    "mobile_close_session",
     "Close current Appium mobile session.",
     {},
     async () => {

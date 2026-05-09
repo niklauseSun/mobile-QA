@@ -10,14 +10,15 @@ const selectorSchema = z.object({
     "iosPredicate",
     "iosClassChain",
     "text",
-    "xpath"
+    "xpath",
+    "css"
   ]),
   value: z.string()
 });
 
 export function registerTypeTextTool(server: McpServer) {
   server.tool(
-    "mobile.type_text",
+    "mobile_type_text",
     "Type text into a mobile input element.",
     {
       selector: selectorSchema,

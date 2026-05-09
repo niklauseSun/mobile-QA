@@ -6,7 +6,7 @@ import { ensureDir } from "../evidence/artifact.js";
 
 export function registerScreenshotTool(server: McpServer) {
   server.tool(
-    "mobile.screenshot",
+    "mobile_screenshot",
     "Take a screenshot from current mobile screen.",
     {
       name: z.string().optional(),

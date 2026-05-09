@@ -1,7 +1,8 @@
 import path from "node:path";
 import { getMobileSession } from "../appium/session.js";
-import type { MobileFlow } from "./types.js";
+import type { FlowStep, MobileFlow } from "./types.js";
 import { createRunDir, ensureDir, writeTextFile } from "../evidence/artifact.js";
+import { createJUnitReport, type JUnitTestCase } from "../reports/junit.js";
 
 export async function runFlow(flow: MobileFlow) {
   const { driver, adapter } = getMobileSession();
@@ -12,13 +13,18 @@ export async function runFlow(flow: MobileFlow) {
 
   await ensureDir(screenshotsDir);
   await ensureDir(pageSourceDir);
-  await writeTextFile(path.join(runDir, "flow.json"), JSON.stringify(flow, null, 2));
+  await writeTextFile(
+    path.join(runDir, "flow.json"),
+    JSON.stringify(flow, null, 2)
+  );
 
   const results: string[] = [];
+  const testCases: JUnitTestCase[] = [];
 
   for (let i = 0; i < flow.steps.length; i++) {
     const step = flow.steps[i];
     const stepNo = i + 1;
+    const startedAt = Date.now();
 
     try {
       switch (step.action) {
@@ -80,23 +86,40 @@ export async function runFlow(flow: MobileFlow) {
           throw new Error(`Unsupported flow step: ${JSON.stringify(neverStep)}`);
         }
       }
+
+      testCases.push({
+        name: createTestCaseName(stepNo, step),
+        timeMs: Date.now() - startedAt
+      });
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
 
-      const failedScreenshot = path.join(
-        screenshotsDir,
-        `${String(stepNo).padStart(3, "0")}-failed.png`
-      );
-      const failedSource = path.join(
-        pageSourceDir,
-        `${String(stepNo).padStart(3, "0")}-failed.xml`
-      );
-
-      await driver.saveScreenshot(failedScreenshot);
-      await writeTextFile(failedSource, await driver.getPageSource());
+      testCases.push({
+        name: createTestCaseName(stepNo, step),
+        timeMs: Date.now() - startedAt,
+        failureMessage: message
+      });
 
       results.push(`[${stepNo}] failed: ${message}`);
-      await writeTextFile(path.join(runDir, "report.md"), createMarkdownReport(flow.name, results));
+      try {
+        const failedScreenshot = path.join(
+          screenshotsDir,
+          `${String(stepNo).padStart(3, "0")}-failed.png`
+        );
+        const failedSource = path.join(
+          pageSourceDir,
+          `${String(stepNo).padStart(3, "0")}-failed.xml`
+        );
+
+        await driver.saveScreenshot(failedScreenshot);
+        await writeTextFile(failedSource, await driver.getPageSource());
+      } catch (evidenceError) {
+        const evidenceMessage =
+          evidenceError instanceof Error ? evidenceError.message : String(evidenceError);
+        results.push(`[${stepNo}] evidence collection failed: ${evidenceMessage}`);
+      }
+
+      await writeReports(runDir, flow.name, results, testCases);
 
       throw new Error(
         `Flow "${flow.name}" failed at step ${stepNo}: ${message}\nArtifacts: ${runDir}`
@@ -104,12 +127,56 @@ export async function runFlow(flow: MobileFlow) {
     }
   }
 
-  await writeTextFile(path.join(runDir, "report.md"), createMarkdownReport(flow.name, results));
+  await writeReports(runDir, flow.name, results, testCases);
 
   return {
     runDir,
     results
   };
+}
+
+async function writeReports(
+  runDir: string,
+  flowName: string,
+  results: string[],
+  testCases: JUnitTestCase[]
+) {
+  await writeTextFile(
+    path.join(runDir, "report.md"),
+    createMarkdownReport(flowName, results)
+  );
+  await writeTextFile(
+    path.join(runDir, "junit.xml"),
+    createJUnitReport({
+      suiteName: flowName,
+      testCases
+    })
+  );
+}
+
+function createTestCaseName(stepNo: number, step: FlowStep): string {
+  switch (step.action) {
+    case "tap":
+    case "type":
+      return `[${stepNo}] ${step.action} ${step.selector.strategy}=${step.selector.value}`;
+
+    case "assertText":
+      return `[${stepNo}] assertText ${step.text}`;
+
+    case "wait":
+      return `[${stepNo}] wait ${step.ms}ms`;
+
+    case "screenshot":
+      return `[${stepNo}] screenshot ${step.name ?? "screenshot"}`;
+
+    case "back":
+      return `[${stepNo}] back`;
+
+    default: {
+      const neverStep: never = step;
+      return `[${stepNo}] unsupported ${JSON.stringify(neverStep)}`;
+    }
+  }
 }
 
 function createMarkdownReport(flowName: string, results: string[]) {
