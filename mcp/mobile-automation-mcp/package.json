@@ -8,8 +8,10 @@
   },
   "scripts": {
     "dev": "tsx src/index.ts",
+    "dev:http": "MOBILE_MCP_TRANSPORT=http tsx src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
+    "start:http": "MOBILE_MCP_TRANSPORT=http node dist/index.js",
     "appium": "appium --address 127.0.0.1 --port 4723",
     "appium:debug": "appium --address 127.0.0.1 --port 4723 --log-level debug"
   },

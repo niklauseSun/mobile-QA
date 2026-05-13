@@ -19,6 +19,8 @@ export interface MobileSessionConfig {
   noReset?: boolean;
   fullReset?: boolean;
   newCommandTimeout?: number;
+
+  forceNew?: boolean;
 }
 
 export function createCapabilities(config: MobileSessionConfig) {

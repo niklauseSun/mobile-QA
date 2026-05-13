@@ -1,0 +1,9 @@
+{
+  "selector": {
+    "strategy": "accessibilityId",
+    "value": "settings.logout"
+  },
+  "direction": "up",
+  "maxScrolls": 4,
+  "timeoutMs": 10000
+}

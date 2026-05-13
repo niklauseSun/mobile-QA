@@ -19,6 +19,9 @@ export function registerRunFlowTool(server: McpServer) {
             text: [
               `Flow completed: ${flow.name}`,
               `Artifacts: ${result.runDir}`,
+              ...(result.resources.length > 0
+                ? [`Resources:`, ...result.resources.map((uri) => `- ${uri}`)]
+                : []),
               ``,
               ...result.results
             ].join("\n")

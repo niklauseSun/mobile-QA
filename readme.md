@@ -1222,3 +1222,12 @@ AI 驱动的移动端自动化测试平台
 ```
 UI Map + Flow Generator + Test Data + Device Orchestrator + Evidence + Report + CI + Policy Engine
 ```
+
+
+第一优先级：README + 示例 flow + MCP 配置
+第二优先级：swipe/scroll/longPress/hideKeyboard/deeplink
+第三优先级：MCP resources 暴露截图、page source、报告
+第四优先级：设备/session 管理
+第五优先级：logcat/syslog/Appium logs
+第六优先级：UI Map / selector 发现
+第七优先级：HTTP/SSE/Docker/API key 生产化部署

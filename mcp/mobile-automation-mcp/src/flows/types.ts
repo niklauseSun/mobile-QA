@@ -1,4 +1,8 @@
 import type { MobilePlatform, MobileRuntime, MobileSelector } from "../selectors/types.js";
+import type {
+  MobilePoint,
+  SwipeDirection
+} from "../appium/gestures.js";
 
 export type FlowStep =
   | {
@@ -28,6 +32,44 @@ export type FlowStep =
     }
   | {
       action: "back";
+    }
+  | {
+      action: "swipe";
+      direction?: SwipeDirection;
+      durationMs?: number;
+      percent?: number;
+      from?: MobilePoint;
+      to?: MobilePoint;
+    }
+  | {
+      action: "scroll";
+      selector?: MobileSelector;
+      scrollableSelector?: MobileSelector;
+      direction?: SwipeDirection;
+      durationMs?: number;
+      percent?: number;
+      from?: MobilePoint;
+      to?: MobilePoint;
+      maxScrolls?: number;
+      timeoutMs?: number;
+    }
+  | {
+      action: "longPress";
+      selector?: MobileSelector;
+      x?: number;
+      y?: number;
+      durationMs?: number;
+      timeoutMs?: number;
+    }
+  | {
+      action: "hideKeyboard";
+      keys?: string[];
+    }
+  | {
+      action: "deepLink";
+      url: string;
+      appIdentifier: string;
+      waitForLaunch?: boolean;
     };
 
 export interface MobileFlow {

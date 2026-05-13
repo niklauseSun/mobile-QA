@@ -24,7 +24,9 @@ export function registerLaunchAppTool(server: McpServer) {
 
       noReset: z.boolean().optional(),
       fullReset: z.boolean().optional(),
-      newCommandTimeout: z.number().optional()
+      newCommandTimeout: z.number().optional(),
+
+      forceNew: z.boolean().optional()
     },
     async (args) => {
       const session = await createMobileSession(args);
@@ -33,7 +35,7 @@ export function registerLaunchAppTool(server: McpServer) {
         content: [
           {
             type: "text",
-            text: `Mobile session created. platform=${session.platform}, runtime=${session.runtime}, sessionId=${session.sessionId}`
+            text: `Mobile session ready. platform=${session.platform}, runtime=${session.runtime}, sessionId=${session.sessionId}, createdAt=${session.createdAt}`
           }
         ]
       };

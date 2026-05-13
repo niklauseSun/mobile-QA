@@ -1,0 +1,8 @@
+{
+  "selector": {
+    "strategy": "accessibilityId",
+    "value": "feed.item.1"
+  },
+  "durationMs": 1200,
+  "timeoutMs": 10000
+}

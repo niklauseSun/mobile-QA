@@ -1,0 +1,36 @@
+{
+  "name": "android-basic-navigation",
+  "platform": "android",
+  "runtime": "android-native",
+  "steps": [
+    {
+      "action": "assertText",
+      "text": "Home",
+      "timeoutMs": 15000
+    },
+    {
+      "action": "tap",
+      "selector": {
+        "strategy": "accessibilityId",
+        "value": "home.profileEntry"
+      }
+    },
+    {
+      "action": "assertText",
+      "text": "Profile",
+      "timeoutMs": 10000
+    },
+    {
+      "action": "screenshot",
+      "name": "profile"
+    },
+    {
+      "action": "back"
+    },
+    {
+      "action": "assertText",
+      "text": "Home",
+      "timeoutMs": 10000
+    }
+  ]
+}

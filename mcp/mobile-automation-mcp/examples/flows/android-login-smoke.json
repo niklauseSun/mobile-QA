@@ -1,0 +1,53 @@
+{
+  "name": "android-login-smoke",
+  "platform": "android",
+  "runtime": "android-native",
+  "steps": [
+    {
+      "action": "tap",
+      "selector": {
+        "strategy": "accessibilityId",
+        "value": "login.phoneInput"
+      }
+    },
+    {
+      "action": "type",
+      "selector": {
+        "strategy": "accessibilityId",
+        "value": "login.phoneInput"
+      },
+      "text": "13800000000"
+    },
+    {
+      "action": "tap",
+      "selector": {
+        "strategy": "accessibilityId",
+        "value": "login.passwordInput"
+      }
+    },
+    {
+      "action": "type",
+      "selector": {
+        "strategy": "accessibilityId",
+        "value": "login.passwordInput"
+      },
+      "text": "password-for-local-testing"
+    },
+    {
+      "action": "tap",
+      "selector": {
+        "strategy": "accessibilityId",
+        "value": "login.submit"
+      }
+    },
+    {
+      "action": "assertText",
+      "text": "Home",
+      "timeoutMs": 15000
+    },
+    {
+      "action": "screenshot",
+      "name": "android-home"
+    }
+  ]
+}

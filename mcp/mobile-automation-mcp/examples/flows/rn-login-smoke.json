@@ -1,0 +1,38 @@
+{
+  "name": "rn-login-smoke",
+  "platform": "android",
+  "runtime": "rn",
+  "steps": [
+    {
+      "action": "tap",
+      "selector": {
+        "strategy": "testId",
+        "value": "login.phoneInput"
+      }
+    },
+    {
+      "action": "type",
+      "selector": {
+        "strategy": "testId",
+        "value": "login.phoneInput"
+      },
+      "text": "13800000000"
+    },
+    {
+      "action": "tap",
+      "selector": {
+        "strategy": "testId",
+        "value": "login.submit"
+      }
+    },
+    {
+      "action": "assertText",
+      "text": "Home",
+      "timeoutMs": 15000
+    },
+    {
+      "action": "screenshot",
+      "name": "rn-home"
+    }
+  ]
+}

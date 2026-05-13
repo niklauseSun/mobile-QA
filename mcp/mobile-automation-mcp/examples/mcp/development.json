@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "mobile-automation-mcp": {
+      "command": "npm",
+      "args": [
+        "--prefix",
+        "/Users/user/code/mobile-qa/mcp/mobile-automation-mcp",
+        "run",
+        "dev"
+      ]
+    }
+  }
+}

@@ -3,6 +3,7 @@ import path from "node:path";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { getMobileSession } from "../appium/session.js";
 import { writeTextFile } from "../evidence/artifact.js";
+import { tryCreateArtifactResourceUri } from "../evidence/resources.js";
 
 export function registerGetPageSourceTool(server: McpServer) {
   server.tool(
@@ -20,12 +21,16 @@ export function registerGetPageSourceTool(server: McpServer) {
       if (saveToFile) {
         const filePath = path.resolve(outputDir, `source-${Date.now()}.xml`);
         await writeTextFile(filePath, source);
+        const resourceUri = tryCreateArtifactResourceUri(filePath);
 
         return {
           content: [
             {
               type: "text",
-              text: `Page source saved: ${filePath}`
+              text: [
+                `Page source saved: ${filePath}`,
+                ...(resourceUri ? [`Resource: ${resourceUri}`] : [])
+              ].join("\n")
             }
           ]
         };

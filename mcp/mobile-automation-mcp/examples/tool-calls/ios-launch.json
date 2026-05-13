@@ -1,0 +1,9 @@
+{
+  "platform": "ios",
+  "runtime": "ios-native",
+  "appiumServerUrl": "http://127.0.0.1:4723",
+  "deviceName": "iPhone 15",
+  "bundleId": "com.example.app",
+  "noReset": true,
+  "newCommandTimeout": 300
+}

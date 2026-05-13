@@ -1,0 +1,53 @@
+{
+  "name": "ios-login-smoke",
+  "platform": "ios",
+  "runtime": "ios-native",
+  "steps": [
+    {
+      "action": "tap",
+      "selector": {
+        "strategy": "accessibilityId",
+        "value": "login.emailInput"
+      }
+    },
+    {
+      "action": "type",
+      "selector": {
+        "strategy": "accessibilityId",
+        "value": "login.emailInput"
+      },
+      "text": "tester@example.com"
+    },
+    {
+      "action": "tap",
+      "selector": {
+        "strategy": "accessibilityId",
+        "value": "login.passwordInput"
+      }
+    },
+    {
+      "action": "type",
+      "selector": {
+        "strategy": "accessibilityId",
+        "value": "login.passwordInput"
+      },
+      "text": "password-for-local-testing"
+    },
+    {
+      "action": "tap",
+      "selector": {
+        "strategy": "accessibilityId",
+        "value": "login.submit"
+      }
+    },
+    {
+      "action": "assertText",
+      "text": "Home",
+      "timeoutMs": 15000
+    },
+    {
+      "action": "screenshot",
+      "name": "ios-home"
+    }
+  ]
+}

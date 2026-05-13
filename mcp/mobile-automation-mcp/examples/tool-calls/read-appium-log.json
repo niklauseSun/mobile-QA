@@ -1,0 +1,6 @@
+{
+  "path": "artifacts/logs/appium.log",
+  "maxLines": 200,
+  "maxBytes": 262144,
+  "redact": true
+}

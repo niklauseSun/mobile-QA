@@ -1,7 +1,15 @@
 import path from "node:path";
 import { getMobileSession } from "../appium/session.js";
+import {
+  hideKeyboard,
+  openDeepLink,
+  performLongPress,
+  performScroll,
+  performSwipe
+} from "../appium/gestures.js";
 import type { FlowStep, MobileFlow } from "./types.js";
 import { createRunDir, ensureDir, writeTextFile } from "../evidence/artifact.js";
+import { createArtifactResourceUri } from "../evidence/resources.js";
 import { createJUnitReport, type JUnitTestCase } from "../reports/junit.js";
 
 export async function runFlow(flow: MobileFlow) {
@@ -20,6 +28,7 @@ export async function runFlow(flow: MobileFlow) {
 
   const results: string[] = [];
   const testCases: JUnitTestCase[] = [];
+  const artifactPaths: string[] = [];
 
   for (let i = 0; i < flow.steps.length; i++) {
     const step = flow.steps[i];
@@ -71,6 +80,7 @@ export async function runFlow(flow: MobileFlow) {
             `${String(stepNo).padStart(3, "0")}-${step.name ?? "screenshot"}.png`
           );
           await driver.saveScreenshot(filePath);
+          artifactPaths.push(filePath);
           results.push(`[${stepNo}] screenshot success: ${filePath}`);
           break;
         }
@@ -78,6 +88,36 @@ export async function runFlow(flow: MobileFlow) {
         case "back": {
           await driver.back();
           results.push(`[${stepNo}] back success`);
+          break;
+        }
+
+        case "swipe": {
+          await performSwipe(driver, step);
+          results.push(`[${stepNo}] swipe success: ${step.direction ?? "default"}`);
+          break;
+        }
+
+        case "scroll": {
+          await performScroll(driver, adapter, step);
+          results.push(`[${stepNo}] scroll success: ${describeScrollStep(step)}`);
+          break;
+        }
+
+        case "longPress": {
+          await performLongPress(driver, adapter, step);
+          results.push(`[${stepNo}] longPress success: ${describeLongPressStep(step)}`);
+          break;
+        }
+
+        case "hideKeyboard": {
+          await hideKeyboard(driver, step);
+          results.push(`[${stepNo}] hideKeyboard success`);
+          break;
+        }
+
+        case "deepLink": {
+          await openDeepLink(driver, step);
+          results.push(`[${stepNo}] deepLink success: ${step.url}`);
           break;
         }
 
@@ -113,25 +153,35 @@ export async function runFlow(flow: MobileFlow) {
 
         await driver.saveScreenshot(failedScreenshot);
         await writeTextFile(failedSource, await driver.getPageSource());
+        artifactPaths.push(failedScreenshot, failedSource);
       } catch (evidenceError) {
         const evidenceMessage =
           evidenceError instanceof Error ? evidenceError.message : String(evidenceError);
         results.push(`[${stepNo}] evidence collection failed: ${evidenceMessage}`);
       }
 
-      await writeReports(runDir, flow.name, results, testCases);
+      artifactPaths.push(
+        ...(await writeReports(runDir, flow.name, results, testCases))
+      );
 
       throw new Error(
-        `Flow "${flow.name}" failed at step ${stepNo}: ${message}\nArtifacts: ${runDir}`
+        [
+          `Flow "${flow.name}" failed at step ${stepNo}: ${message}`,
+          `Artifacts: ${runDir}`,
+          ...formatArtifactResources(artifactPaths)
+        ].join("\n")
       );
     }
   }
 
-  await writeReports(runDir, flow.name, results, testCases);
+  artifactPaths.push(
+    ...(await writeReports(runDir, flow.name, results, testCases))
+  );
 
   return {
     runDir,
-    results
+    results,
+    resources: toArtifactResourceUris(artifactPaths)
   };
 }
 
@@ -141,17 +191,19 @@ async function writeReports(
   results: string[],
   testCases: JUnitTestCase[]
 ) {
+  const reportPath = path.join(runDir, "report.md");
+  const junitPath = path.join(runDir, "junit.xml");
+
+  await writeTextFile(reportPath, createMarkdownReport(flowName, results));
   await writeTextFile(
-    path.join(runDir, "report.md"),
-    createMarkdownReport(flowName, results)
-  );
-  await writeTextFile(
-    path.join(runDir, "junit.xml"),
+    junitPath,
     createJUnitReport({
       suiteName: flowName,
       testCases
     })
   );
+
+  return [reportPath, junitPath];
 }
 
 function createTestCaseName(stepNo: number, step: FlowStep): string {
@@ -172,6 +224,21 @@ function createTestCaseName(stepNo: number, step: FlowStep): string {
     case "back":
       return `[${stepNo}] back`;
 
+    case "swipe":
+      return `[${stepNo}] swipe ${step.direction ?? "default"}`;
+
+    case "scroll":
+      return `[${stepNo}] scroll ${describeScrollStep(step)}`;
+
+    case "longPress":
+      return `[${stepNo}] longPress ${describeLongPressStep(step)}`;
+
+    case "hideKeyboard":
+      return `[${stepNo}] hideKeyboard`;
+
+    case "deepLink":
+      return `[${stepNo}] deepLink ${step.url}`;
+
     default: {
       const neverStep: never = step;
       return `[${stepNo}] unsupported ${JSON.stringify(neverStep)}`;
@@ -191,4 +258,34 @@ function createMarkdownReport(flowName: string, results: string[]) {
     ...results.map((item) => `- ${item}`),
     ``
   ].join("\n");
+}
+
+function formatArtifactResources(artifactPaths: string[]) {
+  const resourceUris = toArtifactResourceUris(artifactPaths);
+
+  if (resourceUris.length === 0) {
+    return [];
+  }
+
+  return ["Resources:", ...resourceUris.map((uri) => `- ${uri}`)];
+}
+
+function toArtifactResourceUris(artifactPaths: string[]) {
+  return [...new Set(artifactPaths.map((filePath) => createArtifactResourceUri(filePath)))];
+}
+
+function describeScrollStep(step: Extract<FlowStep, { action: "scroll" }>) {
+  if (step.selector) {
+    return `${step.selector.strategy}=${step.selector.value}`;
+  }
+
+  return `${step.direction ?? "default"} x${step.maxScrolls ?? 1}`;
+}
+
+function describeLongPressStep(step: Extract<FlowStep, { action: "longPress" }>) {
+  if (step.selector) {
+    return `${step.selector.strategy}=${step.selector.value}`;
+  }
+
+  return `x=${step.x}, y=${step.y}`;
 }

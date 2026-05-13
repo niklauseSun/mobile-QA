@@ -1,0 +1,5 @@
+{
+  "url": "demo://orders/123",
+  "appIdentifier": "com.example.app",
+  "waitForLaunch": true
+}

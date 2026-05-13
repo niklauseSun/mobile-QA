@@ -1,0 +1,10 @@
+{
+  "platform": "android",
+  "runtime": "android-native",
+  "appiumServerUrl": "http://127.0.0.1:4723",
+  "deviceName": "Android Emulator",
+  "appPackage": "com.example.app",
+  "appActivity": ".MainActivity",
+  "noReset": true,
+  "newCommandTimeout": 300
+}

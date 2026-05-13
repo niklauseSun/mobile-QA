@@ -1,0 +1,5 @@
+{
+  "maxEntries": 200,
+  "redact": true,
+  "saveToFile": false
+}

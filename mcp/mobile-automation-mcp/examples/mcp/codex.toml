@@ -1,0 +1,3 @@
+[mcp_servers.mobile-automation-mcp]
+command = "node"
+args = ["/Users/user/code/mobile-qa/mcp/mobile-automation-mcp/dist/index.js"]

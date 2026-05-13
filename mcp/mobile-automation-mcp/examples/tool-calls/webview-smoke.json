@@ -1,0 +1,33 @@
+{
+  "sequence": [
+    {
+      "tool": "mobile_get_contexts",
+      "arguments": {}
+    },
+    {
+      "tool": "mobile_switch_context",
+      "arguments": {
+        "context": "WEBVIEW_com.example.app"
+      }
+    },
+    {
+      "tool": "mobile_webview_eval",
+      "arguments": {
+        "script": "return { title: document.title, url: location.href };"
+      }
+    },
+    {
+      "tool": "mobile_webview_tap",
+      "arguments": {
+        "selector": "[data-testid='continue']",
+        "timeoutMs": 10000
+      }
+    },
+    {
+      "tool": "mobile_switch_context",
+      "arguments": {
+        "context": "NATIVE_APP"
+      }
+    }
+  ]
+}

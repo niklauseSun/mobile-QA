@@ -7,13 +7,15 @@ export function registerCloseSessionTool(server: McpServer) {
     "Close current Appium mobile session.",
     {},
     async () => {
-      await closeMobileSession();
+      const closed = await closeMobileSession();
 
       return {
         content: [
           {
             type: "text",
-            text: "Mobile session closed."
+            text: closed
+              ? "Mobile session closed."
+              : "No active mobile session to close."
           }
         ]
       };
