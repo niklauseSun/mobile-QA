@@ -16,6 +16,8 @@ playwright-report/
 # Mobile automation artifacts
 artifacts/
 evidence/
+!mcp/ui-map-mcp/src/evidence/
+!mcp/ui-map-mcp/src/evidence/artifact.ts
 screenshots/
 *.log
 appium.log

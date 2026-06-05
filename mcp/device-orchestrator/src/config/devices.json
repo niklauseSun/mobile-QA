@@ -1,0 +1,40 @@
+{
+  "devices": [
+    {
+      "id": "ios-sim-iphone-15-001",
+      "platform": "ios",
+      "type": "ios-simulator",
+      "deviceName": "iPhone 15",
+      "osVersion": "17.5",
+      "runtimes": ["react-native", "ios-native"],
+      "host": "127.0.0.1",
+      "appiumServerUrl": "http://127.0.0.1:4723",
+      "capabilities": {
+        "platformName": "iOS",
+        "appium:automationName": "XCUITest",
+        "appium:deviceName": "iPhone 15",
+        "appium:platformVersion": "17.5",
+        "appium:udid": "auto"
+      },
+      "status": "idle"
+    },
+    {
+      "id": "android-emu-pixel-8-001",
+      "platform": "android",
+      "type": "android-emulator",
+      "deviceName": "Pixel 8",
+      "osVersion": "14",
+      "runtimes": ["react-native", "android-native"],
+      "host": "127.0.0.1",
+      "appiumServerUrl": "http://127.0.0.1:4725",
+      "capabilities": {
+        "platformName": "Android",
+        "appium:automationName": "UiAutomator2",
+        "appium:deviceName": "Pixel 8",
+        "appium:platformVersion": "14",
+        "appium:udid": "emulator-5554"
+      },
+      "status": "idle"
+    }
+  ]
+}

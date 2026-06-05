@@ -1,0 +1,32 @@
+{
+  "screens": {
+    "OrderScreen": {
+      "name": "OrderScreen",
+      "description": "Order list and order detail entry points.",
+      "route": "/orders",
+      "elements": {
+        "pendingOrderCell": {
+          "semanticId": "OrderScreen.pendingOrderCell",
+          "description": "Pending payment order row.",
+          "type": "cell",
+          "aliases": ["pending order", "unpaid order"],
+          "actions": ["tap", "assertVisible"],
+          "platform": {
+            "ios": {
+              "selectorType": "accessibilityId",
+              "selector": "order.pending.cell"
+            },
+            "android": {
+              "selectorType": "resourceId",
+              "selector": "com.example:id/order_pending_cell"
+            },
+            "web": {
+              "selectorType": "css",
+              "selector": "[data-testid='order-pending-cell']"
+            }
+          }
+        }
+      }
+    }
+  }
+}

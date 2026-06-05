@@ -1,0 +1,76 @@
+{
+  "screens": {
+    "LoginScreen": {
+      "name": "LoginScreen",
+      "description": "Login screen for existing users.",
+      "route": "/login",
+      "elements": {
+        "phoneInput": {
+          "semanticId": "LoginScreen.phoneInput",
+          "description": "Mobile phone number input.",
+          "type": "input",
+          "aliases": ["phone", "mobile number", "手机号"],
+          "actions": ["focus", "input", "clear", "assertVisible"],
+          "required": true,
+          "platform": {
+            "ios": {
+              "selectorType": "accessibilityId",
+              "selector": "login.phone"
+            },
+            "android": {
+              "selectorType": "resourceId",
+              "selector": "com.example:id/login_phone"
+            },
+            "web": {
+              "selectorType": "data-testid",
+              "selector": "login-phone"
+            }
+          }
+        },
+        "emailInput": {
+          "semanticId": "LoginScreen.emailInput",
+          "description": "Email address input.",
+          "type": "input",
+          "aliases": ["email", "account"],
+          "actions": ["focus", "input", "clear", "assertVisible"],
+          "required": true,
+          "platform": {
+            "ios": {
+              "selectorType": "accessibilityId",
+              "selector": "login.email"
+            },
+            "android": {
+              "selectorType": "resourceId",
+              "selector": "com.example:id/login_email"
+            },
+            "web": {
+              "selectorType": "data-testid",
+              "selector": "login-email"
+            }
+          }
+        },
+        "submitButton": {
+          "semanticId": "LoginScreen.submitButton",
+          "description": "Submit login form.",
+          "type": "button",
+          "aliases": ["sign in", "login", "login button", "登录", "登录按钮"],
+          "actions": ["tap", "assertVisible"],
+          "platform": {
+            "ios": {
+              "selectorType": "accessibilityId",
+              "selector": "login.submit"
+            },
+            "android": {
+              "selectorType": "accessibilityId",
+              "selector": "login.submit"
+            },
+            "web": {
+              "selectorType": "css",
+              "selector": "[data-testid='login-submit']"
+            }
+          }
+        }
+      }
+    }
+  }
+}

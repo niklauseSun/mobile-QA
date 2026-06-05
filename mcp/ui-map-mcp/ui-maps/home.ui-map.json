@@ -1,0 +1,53 @@
+{
+  "screens": {
+    "HomeScreen": {
+      "name": "HomeScreen",
+      "description": "Main signed-in landing screen.",
+      "route": "/home",
+      "elements": {
+        "orderEntry": {
+          "semanticId": "HomeScreen.orderEntry",
+          "description": "Entry point for the user's orders.",
+          "type": "button",
+          "aliases": ["orders", "order entry", "订单入口"],
+          "actions": ["tap", "assertVisible"],
+          "platform": {
+            "ios": {
+              "selectorType": "accessibilityId",
+              "selector": "home.orderEntry"
+            },
+            "android": {
+              "selectorType": "accessibilityId",
+              "selector": "home.orderEntry"
+            },
+            "web": {
+              "selectorType": "data-testid",
+              "selector": "home-order-entry"
+            }
+          }
+        },
+        "ordersTab": {
+          "semanticId": "HomeScreen.ordersTab",
+          "description": "Tab that opens the order list.",
+          "type": "tab",
+          "aliases": ["orders", "order history"],
+          "actions": ["tap", "assertVisible"],
+          "platform": {
+            "ios": {
+              "selectorType": "accessibilityId",
+              "selector": "home.orders"
+            },
+            "android": {
+              "selectorType": "accessibilityId",
+              "selector": "home.orders"
+            },
+            "web": {
+              "selectorType": "data-testid",
+              "selector": "home-orders"
+            }
+          }
+        }
+      }
+    }
+  }
+}
